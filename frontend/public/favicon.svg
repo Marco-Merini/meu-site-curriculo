@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Marco Merini">
+  <rect width="64" height="64" rx="14" fill="#0f172a"/>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="#10b981" stroke-width="2" stroke-opacity="0.45"/>
+  <path d="M13 44V20h5.2l6.8 13.2L31.8 20H37v24h-4.6V28.4l-5.8 11.2h-3.2l-5.8-11.2V44H13zm28 0V20h4.2l5.4 10.6L56 20h4v24h-4.2V29l-4.4 8.6h-2.8L44.2 29v15H41z" fill="#f8fafc"/>
+  <circle cx="54" cy="13" r="4" fill="#10b981"/>
+</svg>

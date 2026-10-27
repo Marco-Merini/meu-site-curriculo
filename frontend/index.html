@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marco Leone Merini | Desenvolvedor de Software &amp; Engenharia de Software</title>
+    <meta
+      name="description"
+      content="Portfólio profissional de Marco Leone Merini, Desenvolvedor de Software graduado em Engenharia de Software em Joinville/SC. Experiência em C#, .NET, Blazor, SQL Server, Engenharia de Dados e criador do projeto NutrIA com arquitetura RAG."
+    />
+    <meta name="author" content="Marco Leone Merini" />
+    <meta name="theme-color" content="#090d16" />
+
+    <!-- Open Graph / Compartilhamento -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Marco Leone Merini | Desenvolvedor de Software | Engenharia de Software" />
+    <meta
+      property="og:description"
+      content="Desenvolvedor de Software formado em Engenharia de Software. Experiência em aplicações .NET, Blazor Hybrid, SQL Server, Engenharia de Dados e criador do NutrIA (plataforma clínica com IA e RAG)."
+    />
+
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('marco-portfolio-theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = saved === 'light' || saved === 'dark' ? saved : (prefersDark ? 'dark' : 'light');
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="antialiased selection:bg-emerald-500/20 selection:text-emerald-700 dark:selection:bg-emerald-400/25 dark:selection:text-emerald-300">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
