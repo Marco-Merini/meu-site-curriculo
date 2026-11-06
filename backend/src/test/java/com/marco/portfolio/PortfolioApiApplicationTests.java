@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -42,20 +41,20 @@ class PortfolioApiApplicationTests {
     }
 
     @Test
-    @DisplayName("GET /api/portfolio deve retornar todos os dados profissionais confirmados de Marco Leone Merini")
+    @DisplayName("GET /api/portfolio deve retornar os dados profissionais de Marco Leone Merini")
     void deveRetornarDadosDoPortfolio() throws Exception {
         mockMvc.perform(get("/api/portfolio").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.perfil.nomeCompleto", is("Marco Leone Merini")))
+                .andExpect(jsonPath("$.perfil.cargo", is("Desenvolvedor de Software")))
                 .andExpect(jsonPath("$.perfil.titulo", is("Desenvolvedor de Software | Engenharia de Software")))
                 .andExpect(jsonPath("$.perfil.localizacao", is("Joinville, Santa Catarina, Brasil")))
-                .andExpect(jsonPath("$.formacao.curso", is("Engenharia de Software")))
-                .andExpect(jsonPath("$.formacao.conclusao", is("Agosto de 2026")))
-                .andExpect(jsonPath("$.formacao.status", is("Concluído")))
+                .andExpect(jsonPath("$.formacao.curso", is("Bacharelado em Engenharia de Software")))
+                .andExpect(jsonPath("$.formacao.conclusao", is("Concluído em agosto de 2026")))
                 .andExpect(jsonPath("$.experiencias", hasSize(2)))
                 .andExpect(jsonPath("$.experiencias[0].empresa", is("WTTI Sistemas")))
                 .andExpect(jsonPath("$.experiencias[1].empresa", is("Conta Azul")))
-                .andExpect(jsonPath("$.habilidades", hasSize(greaterThanOrEqualTo(5))))
+                .andExpect(jsonPath("$.habilidades", hasSize(6)))
                 .andExpect(jsonPath("$.projetoDestaque.nome", is("NutrIA")))
                 .andExpect(jsonPath("$.projetoDestaque.repositorioUrl", is("https://github.com/Marco-Merini/NutrIA")))
                 .andExpect(jsonPath("$.contato.email", is("marcoleonemerini@gmail.com")))
@@ -74,7 +73,7 @@ class PortfolioApiApplicationTests {
     }
 
     @Test
-    @DisplayName("POST /api/contato com dados válidos deve responder de forma honesta quando o serviço de e-mail não está configurado")
+    @DisplayName("POST /api/contato com dados válidos deve responder com canais de envio quando o serviço de e-mail não está configurado")
     void deveProcessarContatoValidoComTransparencia() throws Exception {
         String payload = """
                 {
