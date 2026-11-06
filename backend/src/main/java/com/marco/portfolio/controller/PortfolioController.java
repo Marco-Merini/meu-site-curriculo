@@ -5,10 +5,14 @@ import com.marco.portfolio.dto.ContatoResponseDto;
 import com.marco.portfolio.dto.HealthResponseDto;
 import com.marco.portfolio.dto.PortfolioResponseDto;
 import com.marco.portfolio.service.ContatoService;
+import com.marco.portfolio.service.CurriculoPdfService;
 import com.marco.portfolio.service.PortfolioService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
 @RestController
@@ -24,15 +29,37 @@ public class PortfolioController {
 
     private final PortfolioService portfolioService;
     private final ContatoService contatoService;
+    private final CurriculoPdfService curriculoPdfService;
 
-    public PortfolioController(PortfolioService portfolioService, ContatoService contatoService) {
+    public PortfolioController(
+            PortfolioService portfolioService,
+            ContatoService contatoService,
+            CurriculoPdfService curriculoPdfService
+    ) {
         this.portfolioService = portfolioService;
         this.contatoService = contatoService;
+        this.curriculoPdfService = curriculoPdfService;
     }
 
     @GetMapping("/portfolio")
     public ResponseEntity<PortfolioResponseDto> obterPortfolio() {
         return ResponseEntity.ok(portfolioService.obterDadosPortfolio());
+    }
+
+    @GetMapping("/curriculo/pdf")
+    public ResponseEntity<byte[]> baixarCurriculoPdf() {
+        byte[] pdfBytes = curriculoPdfService.gerarCurriculoAtsPdf();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename("Curriculo_Marco_Leone_Merini.pdf", StandardCharsets.UTF_8)
+                        .build()
+        );
+        headers.setContentLength(pdfBytes.length);
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 
     @GetMapping("/health")
