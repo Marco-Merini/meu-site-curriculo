@@ -16,26 +16,17 @@ public record PortfolioResponseDto(
             String nomeCompleto,
             String nomeExibicao,
             String iniciais,
+            String cargo,
             String titulo,
             String localizacao,
-            String apresentacaoHero,
-            List<String> sobreMimParagrafos,
-            List<DestaqueProfissionalDto> destaquesSobre
-    ) {}
-
-    public record DestaqueProfissionalDto(
-            String titulo,
-            String descricao,
-            String icone
+            List<String> apresentacaoParagrafos,
+            List<String> sobreMimParagrafos
     ) {}
 
     public record FormacaoDto(
-            String grau,
             String curso,
             String instituicao,
-            String conclusao,
-            String status,
-            String resumo
+            String conclusao
     ) {}
 
     public record ExperienciaDto(
@@ -43,8 +34,6 @@ public record PortfolioResponseDto(
             String empresa,
             String cargo,
             String periodo,
-            String observacaoPeriodo,
-            String tipo,
             List<String> atribuicoes,
             List<String> tecnologias
     ) {}
@@ -52,82 +41,37 @@ public record PortfolioResponseDto(
     public record CategoriaHabilidadeDto(
             String id,
             String categoria,
-            String descricao,
             String icone,
-            List<HabilidadeItemDto> itens
-    ) {}
-
-    public record HabilidadeItemDto(
-            String nome,
-            String contexto,
-            boolean destaque
+            List<String> itens
     ) {}
 
     public record ProjetoDestaqueDto(
             String nome,
-            String subtitulo,
-            String identificacao,
-            String licencaNota,
-            String resumo,
-            String problema,
-            String solucao,
-            String avisoResponsabilidadeClinica,
-            String repositorioUrl,
-            String readmeUrl,
-            String documentacaoTecnicaUrl,
-            String demoUrl,
-            List<String> tecnologiasPrincipais,
-            List<CamadaArquiteturaDto> arquitetura,
-            List<DiferencialTecnicoDto> diferenciais,
-            List<EtapaFluxoRagDto> fluxoRag,
-            List<NotaConformidadeCodigoDto> notasVerificacaoCodigo
-    ) {}
-
-    public record CamadaArquiteturaDto(
-            String camada,
-            String tecnologias,
-            String descricao
-    ) {}
-
-    public record DiferencialTecnicoDto(
             String titulo,
+            String categoria,
             String descricao,
-            String icone
-    ) {}
-
-    public record EtapaFluxoRagDto(
-            int ordem,
-            String etapa,
-            String detalhe
-    ) {}
-
-    public record NotaConformidadeCodigoDto(
-            String item,
-            String status,
-            String observacao
+            String objetivo,
+            List<String> funcionalidades,
+            List<String> tecnologias,
+            String repositorioUrl
     ) {}
 
     public record OutroProjetoDto(
             String id,
             String titulo,
-            String contexto,
-            String periodo,
-            String resumo,
-            List<String> entregasPrincipais,
-            List<String> tecnologias,
-            String notaConfidencialidade
+            String empresa,
+            String descricao,
+            List<String> tecnologias
     ) {}
 
     public record IdiomaDto(
             String idioma,
-            String nivel,
-            String descricao
+            String nivel
     ) {}
 
     public record ContatoPublicoDto(
             String email,
             String telefoneExibicao,
-            String telefoneInternacional,
             String whatsappUrl,
             String linkedinUrl,
             String githubUrl,

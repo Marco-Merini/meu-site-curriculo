@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Mail,
   Phone,
-  MapPin,
   Send,
   MessageCircle,
   ExternalLink,
@@ -20,7 +19,7 @@ const INITIAL_FORM = {
   email: '',
   assunto: '',
   mensagem: '',
-  website: '', // Campo honeypot invisível contra bots
+  website: '',
 };
 
 function validateForm(values) {
@@ -82,7 +81,7 @@ function buildLocalFallbackLinks(values, contato) {
 export function ContactSection({ contato }) {
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [fieldErrors, setFieldErrors] = useState({});
-  const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
+  const [status, setStatus] = useState('idle');
   const [apiResponse, setApiResponse] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -105,7 +104,7 @@ export function ContactSection({ contato }) {
       setCopiedEmail(true);
       setTimeout(() => setCopiedEmail(false), 2500);
     } catch {
-      // Fallback silencioso caso o navegador bloqueie clipboard
+      // Ignora erro caso o navegador restrinja o acesso à área de transferência
     }
   };
 
@@ -142,7 +141,7 @@ export function ContactSection({ contato }) {
       }
       setErrorMessage(
         err.message ||
-          'Não foi possível comunicar com o servidor de contato no momento. Utilize abaixo os canais diretos por WhatsApp ou e-mail.'
+          'Não foi possível processar o envio no momento. Utilize os canais diretos por WhatsApp ou e-mail abaixo.'
       );
       setStatus('error');
     }
@@ -154,36 +153,33 @@ export function ContactSection({ contato }) {
     <section
       id="contato"
       aria-labelledby="contato-heading"
-      className="py-16 sm:py-20 lg:py-24"
+      className="bg-slate-50/70 py-16 sm:py-20 dark:bg-[#0b101b]"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl text-left">
-          <span className="font-mono text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
-            05 // Contato Direto
+          <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
+            Contato
           </span>
           <h2
             id="contato-heading"
-            className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl dark:text-white"
+            className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white"
           >
-            Vamos conversar sobre oportunidades, arquitetura e projetos
+            Entre em Contato
           </h2>
-          <p className="mt-3 text-base text-slate-600 dark:text-slate-300">
-            Entre em contato diretamente por e-mail, WhatsApp, LinkedIn ou utilize o formulário integrado à API do portfólio.
+          <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+            Fique à vontade para entrar em contato por e-mail, WhatsApp, LinkedIn ou pelo formulário abaixo.
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12 text-left">
-          {/* Coluna Esquerda: Canais Diretos Confirmados */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-2xs dark:border-slate-800 dark:bg-[#0f1623]">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                Canais de Contato
+        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12 text-left">
+          {/* Canais Diretos */}
+          <div className="lg:col-span-5">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs dark:border-slate-800 dark:bg-[#0f1623]">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                Canais Diretos
               </h3>
-              <p className="mt-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                Disponível para oportunidades como Desenvolvedor de Software / Engenheiro de Software em Joinville/SC ou remotamente.
-              </p>
 
-              <div className="mt-6 space-y-4">
+              <div className="mt-5 space-y-4">
                 {/* E-mail */}
                 <div className="rounded-xl border border-slate-200/90 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-[#0b101b]">
                   <div className="flex items-start justify-between gap-2">
@@ -192,12 +188,12 @@ export function ContactSection({ contato }) {
                         <Mail className="h-4 w-4" aria-hidden="true" />
                       </div>
                       <div className="min-w-0">
-                        <span className="block text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        <span className="block text-xs font-semibold text-slate-500 dark:text-slate-400">
                           E-mail
                         </span>
                         <a
                           href={`mailto:${contato.email}`}
-                          className="mt-0.5 block truncate font-mono text-xs sm:text-sm font-semibold text-slate-900 hover:text-emerald-700 dark:text-slate-100 dark:hover:text-emerald-400"
+                          className="mt-0.5 block truncate text-xs sm:text-sm font-semibold text-slate-900 hover:text-emerald-700 dark:text-slate-100 dark:hover:text-emerald-400"
                         >
                           {contato.email}
                         </a>
@@ -225,7 +221,7 @@ export function ContactSection({ contato }) {
                   </div>
                 </div>
 
-                {/* WhatsApp / Telefone */}
+                {/* WhatsApp */}
                 <div className="rounded-xl border border-slate-200/90 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-[#0b101b]">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-start gap-3">
@@ -233,11 +229,11 @@ export function ContactSection({ contato }) {
                         <Phone className="h-4 w-4" aria-hidden="true" />
                       </div>
                       <div>
-                        <span className="block text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                          Telefone &amp; WhatsApp
+                        <span className="block text-xs font-semibold text-slate-500 dark:text-slate-400">
+                          WhatsApp
                         </span>
-                        <p className="mt-0.5 font-mono text-sm font-semibold text-slate-900 dark:text-slate-100">
-                          {contato.telefoneInternacional}
+                        <p className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                          {contato.telefoneExibicao}
                         </p>
                       </div>
                     </div>
@@ -248,70 +244,44 @@ export function ContactSection({ contato }) {
                       className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-emerald-700"
                     >
                       <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                      Abrir WhatsApp
+                      Conversar
                     </a>
-                  </div>
-                </div>
-
-                {/* Localização */}
-                <div className="rounded-xl border border-slate-200/90 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-[#0b101b]">
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
-                      <MapPin className="h-4 w-4" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                        Localização
-                      </span>
-                      <p className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        {contato.localizacao}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Redes Profissionais */}
-              <div className="mt-6 pt-5 border-t border-slate-200 dark:border-slate-800">
-                <span className="block text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
-                  Redes Profissionais &amp; Repositórios
-                </span>
-                <div className="grid grid-cols-2 gap-3">
-                  <a
-                    href={contato.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:border-emerald-500/40 hover:text-emerald-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-emerald-400"
-                  >
-                    LinkedIn
-                    <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
-                  </a>
-                  <a
-                    href={contato.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:border-emerald-500/40 hover:text-emerald-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-emerald-400"
-                  >
-                    GitHub
-                    <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
-                  </a>
-                </div>
+              {/* LinkedIn e GitHub */}
+              <div className="mt-5 grid grid-cols-2 gap-3 border-t border-slate-100 pt-5 dark:border-slate-800">
+                <a
+                  href={contato.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:border-emerald-500/40 hover:text-emerald-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-emerald-400"
+                >
+                  LinkedIn
+                  <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+                </a>
+                <a
+                  href={contato.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:border-emerald-500/40 hover:text-emerald-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-emerald-400"
+                >
+                  GitHub
+                  <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+                </a>
               </div>
             </div>
           </div>
 
-          {/* Coluna Direita: Formulário de Contato Integrado ao Backend */}
+          {/* Formulário de Contato */}
           <div className="lg:col-span-7">
             <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xs dark:border-slate-800 dark:bg-[#0f1623]">
-              <h3 className="text-lg font-bold text-slate-900 sm:text-xl dark:text-white">
-                Enviar mensagem
+              <h3 className="text-base font-bold text-slate-900 sm:text-lg dark:text-white">
+                Enviar Mensagem
               </h3>
-              <p className="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                Preencha os campos abaixo. Os dados são validados pelo endpoint <code className="font-mono text-xs text-emerald-700 dark:text-emerald-400">POST /api/contato</code>.
-              </p>
 
-              <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-5">
-                {/* Honeypot anti-bot oculto */}
+              <form onSubmit={handleSubmit} noValidate className="mt-5 space-y-4">
                 <div className="hidden" aria-hidden="true">
                   <label htmlFor="website">Não preencha este campo</label>
                   <input
@@ -325,12 +295,11 @@ export function ContactSection({ contato }) {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  {/* Nome */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <label
                       htmlFor="contato-nome"
-                      className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
+                      className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
                     >
                       Nome *
                     </label>
@@ -343,7 +312,7 @@ export function ContactSection({ contato }) {
                       autoComplete="name"
                       value={formData.nome}
                       onChange={handleChange}
-                      placeholder="Seu nome completo"
+                      placeholder="Seu nome"
                       aria-invalid={Boolean(fieldErrors.nome)}
                       aria-describedby={fieldErrors.nome ? 'erro-nome' : undefined}
                       className={`mt-1.5 w-full rounded-xl border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors dark:bg-[#0b101b] dark:text-slate-100 ${
@@ -359,11 +328,10 @@ export function ContactSection({ contato }) {
                     )}
                   </div>
 
-                  {/* E-mail */}
                   <div>
                     <label
                       htmlFor="contato-email"
-                      className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
+                      className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
                     >
                       E-mail *
                     </label>
@@ -393,11 +361,10 @@ export function ContactSection({ contato }) {
                   </div>
                 </div>
 
-                {/* Assunto */}
                 <div>
                   <label
                     htmlFor="contato-assunto"
-                    className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
+                    className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
                   >
                     Assunto *
                   </label>
@@ -409,7 +376,7 @@ export function ContactSection({ contato }) {
                     maxLength={140}
                     value={formData.assunto}
                     onChange={handleChange}
-                    placeholder="Ex.: Oportunidade Desenvolvedor .NET / Engenharia de Software"
+                    placeholder="Assunto do contato"
                     aria-invalid={Boolean(fieldErrors.assunto)}
                     aria-describedby={fieldErrors.assunto ? 'erro-assunto' : undefined}
                     className={`mt-1.5 w-full rounded-xl border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors dark:bg-[#0b101b] dark:text-slate-100 ${
@@ -425,19 +392,13 @@ export function ContactSection({ contato }) {
                   )}
                 </div>
 
-                {/* Mensagem */}
                 <div>
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="contato-mensagem"
-                      className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
-                    >
-                      Mensagem *
-                    </label>
-                    <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">
-                      {formData.mensagem.length}/2000
-                    </span>
-                  </div>
+                  <label
+                    htmlFor="contato-mensagem"
+                    className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
+                  >
+                    Mensagem *
+                  </label>
                   <textarea
                     id="contato-mensagem"
                     name="mensagem"
@@ -446,7 +407,7 @@ export function ContactSection({ contato }) {
                     maxLength={2000}
                     value={formData.mensagem}
                     onChange={handleChange}
-                    placeholder="Descreva como posso contribuir com sua equipe ou projeto..."
+                    placeholder="Escreva sua mensagem..."
                     aria-invalid={Boolean(fieldErrors.mensagem)}
                     aria-describedby={fieldErrors.mensagem ? 'erro-mensagem' : undefined}
                     className={`mt-1.5 w-full rounded-xl border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors dark:bg-[#0b101b] dark:text-slate-100 ${
@@ -462,22 +423,21 @@ export function ContactSection({ contato }) {
                   )}
                 </div>
 
-                {/* Botões de Ação do Formulário */}
                 <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                   <button
                     type="submit"
                     disabled={status === 'submitting'}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-emerald-600 dark:hover:bg-emerald-500"
                   >
                     {status === 'submitting' ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                        Processando na API...
+                        Enviando...
                       </>
                     ) : (
                       <>
                         <Send className="h-4 w-4" aria-hidden="true" />
-                        Validar e preparar envio
+                        Enviar mensagem
                       </>
                     )}
                   </button>
@@ -489,11 +449,10 @@ export function ContactSection({ contato }) {
                     className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 transition-colors hover:border-emerald-500/40 hover:text-emerald-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-emerald-400"
                   >
                     <MessageCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
-                    Conversar pelo WhatsApp
+                    Chamar no WhatsApp
                   </a>
                 </div>
 
-                {/* Estado de Erro */}
                 {status === 'error' && errorMessage && (
                   <div
                     role="alert"
@@ -509,7 +468,7 @@ export function ContactSection({ contato }) {
                             className="inline-flex items-center gap-1.5 rounded-lg bg-red-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-800"
                           >
                             <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-                            Abrir no cliente de e-mail
+                            Enviar por e-mail
                           </a>
                           <a
                             href={fallbackLinks.whatsappUrl}
@@ -526,16 +485,11 @@ export function ContactSection({ contato }) {
                   </div>
                 )}
 
-                {/* Estado de Resposta da API (Com transparência sobre configuração de e-mail) */}
                 {status === 'success' && apiResponse && (
                   <div
                     role="status"
                     aria-live="polite"
-                    className={`rounded-xl border p-5 text-xs sm:text-sm ${
-                      apiResponse.emailEnviado
-                        ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100'
-                        : 'border-amber-500/40 bg-amber-500/10 text-slate-800 dark:border-amber-500/30 dark:bg-amber-950/30 dark:text-slate-100'
-                    }`}
+                    className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-xs sm:text-sm text-slate-800 dark:text-slate-100"
                   >
                     <div className="flex items-start gap-3">
                       {apiResponse.emailEnviado ? (
@@ -545,44 +499,35 @@ export function ContactSection({ contato }) {
                         />
                       ) : (
                         <Info
-                          className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400"
+                          className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400"
                           aria-hidden="true"
                         />
                       )}
                       <div className="space-y-3">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="font-bold">
-                            {apiResponse.emailEnviado
-                              ? 'E-mail enviado com sucesso!'
-                              : 'Dados validados pela API — Conclua o envio pelo canal direto de sua preferência'}
-                          </span>
-                          {apiResponse.protocolo && (
-                            <span className="rounded-md bg-white/80 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-300">
-                              Protocolo: {apiResponse.protocolo}
-                            </span>
-                          )}
-                        </div>
-
+                        <p className="font-semibold">
+                          {apiResponse.emailEnviado
+                            ? 'Mensagem enviada com sucesso!'
+                            : 'Mensagem pronta para envio'}
+                        </p>
                         <p className="leading-relaxed text-slate-700 dark:text-slate-300">
                           {apiResponse.mensagem}
                         </p>
-
-                        <div className="flex flex-wrap items-center gap-3 pt-1">
+                        <div className="flex flex-wrap items-center gap-2.5 pt-1">
                           <a
                             href={apiResponse.canaisAlternativos?.mailtoUrl || fallbackLinks.mailtoUrl}
-                            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-emerald-700"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-emerald-700"
                           >
-                            <Mail className="h-4 w-4" aria-hidden="true" />
-                            Abrir cliente de e-mail com mensagem pronta
+                            <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+                            Abrir no aplicativo de e-mail
                           </a>
                           <a
                             href={apiResponse.canaisAlternativos?.whatsappUrl || fallbackLinks.whatsappUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-800 transition-colors hover:border-emerald-500/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-800 transition-colors hover:border-emerald-500/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                           >
-                            <MessageCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
-                            Enviar pelo WhatsApp com texto preenchido
+                            <MessageCircle className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                            Enviar pelo WhatsApp
                           </a>
                         </div>
                       </div>

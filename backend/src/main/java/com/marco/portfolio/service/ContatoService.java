@@ -73,7 +73,7 @@ public class ContatoService {
                     true,
                     false,
                     "CANAL_DIRETO_RECOMENDADO",
-                    "Sua mensagem foi validada pela API, porém o serviço de disparo automático de e-mail não está configurado neste ambiente. Para garantir que sua mensagem chegue imediatamente ao Marco, utilize abaixo o envio direto por aplicativo de e-mail ou WhatsApp com o texto já preenchido.",
+                    "Sua mensagem foi preparada com sucesso. Para concluir o envio diretamente ao Marco, escolha abaixo entre abrir seu cliente de e-mail ou iniciar uma conversa no WhatsApp com o texto já preenchido.",
                     protocolo,
                     agora,
                     canaisAlternativos
