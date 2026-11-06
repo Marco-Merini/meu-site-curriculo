@@ -6,6 +6,26 @@ import {
   baixarOuGerarCurriculoPdf,
 } from '../utils/geradorCurriculoAts';
 
+function AtsSectionHeading({ children }) {
+  return (
+    <div className="mb-3">
+      <div className="flex items-center gap-2">
+        <span
+          aria-hidden="true"
+          className="h-3.5 w-1 shrink-0 rounded-none bg-[#173661] dark:bg-sky-400"
+        />
+        <h4 className="text-xs font-bold uppercase tracking-wider text-[#173661] dark:text-sky-300">
+          {children}
+        </h4>
+      </div>
+      <div className="mt-1.5 flex items-center" aria-hidden="true">
+        <span className="h-[2px] w-16 bg-[#173661] dark:bg-sky-400" />
+        <span className="h-px flex-1 bg-slate-300 dark:bg-slate-700" />
+      </div>
+    </div>
+  );
+}
+
 export function ResumeGeneratorSection({ portfolioData }) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [generating, setGenerating] = useState(false);
@@ -50,10 +70,10 @@ export function ResumeGeneratorSection({ portfolioData }) {
                 id="curriculo-heading"
                 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white"
               >
-                Currículo em PDF
+                Currículo Executivo em PDF (Padrão ATS)
               </h2>
               <p className="mt-2 text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-300">
-                Gere e baixe o meu currículo completo clicando no botão ao lado.
+                Documento em coluna única com hierarquia tipográfica executiva e texto 100% selecionável para sistemas de recrutamento e leitura humana.
               </p>
             </div>
 
@@ -115,152 +135,184 @@ export function ResumeGeneratorSection({ portfolioData }) {
             </div>
           </div>
 
-          {/* Prévia em Coluna Única (Padrão ATS) */}
+          {/* Prévia Executiva em Coluna Única (Padrão ATS) */}
           {previewOpen && (
             <div className="mt-8 border-t border-slate-200 pt-8 dark:border-slate-800">
               <div
-                aria-label="Pré-visualização do currículo em formato ATS de coluna única"
-                className="mx-auto max-w-4xl rounded-xl border border-slate-300 bg-white p-6 sm:p-10 text-slate-900 shadow-xs dark:border-slate-700 dark:bg-[#0b101b] dark:text-slate-100"
+                aria-label="Pré-visualização do currículo executivo em formato ATS de coluna única"
+                className="mx-auto max-w-4xl overflow-hidden rounded-xl border border-slate-300 bg-white text-slate-900 shadow-sm dark:border-slate-700 dark:bg-[#0b101b] dark:text-slate-100"
               >
-                {/* 1. Cabeçalho */}
-                <header className="border-b border-slate-300 pb-4 dark:border-slate-700">
-                  <h3 className="text-xl sm:text-2xl font-bold tracking-tight uppercase">
-                    {cv.nomeCompleto}
-                  </h3>
-                  <p className="mt-1 text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200">
-                    {cv.tituloProfissional}
-                  </p>
-                  <p className="mt-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                    {cv.localizacao} | Telefone / WhatsApp: {cv.telefone} | E-mail: {cv.email}
-                  </p>
-                  <p className="mt-0.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                    LinkedIn: {cv.linkedinUrl} | GitHub: {cv.githubUrl}
-                  </p>
-                </header>
+                {/* Faixa superior executiva em azul-marinho */}
+                <div aria-hidden="true" className="h-1.5 w-full bg-[#173661] dark:bg-sky-500" />
 
-                <div className="mt-5 space-y-5 text-sm leading-relaxed">
-                  {/* 2. Resumo Profissional */}
-                  <section>
-                    <h4 className="border-b border-slate-300 pb-1 text-xs font-bold uppercase tracking-wider text-slate-900 dark:border-slate-700 dark:text-white">
-                      RESUMO PROFISSIONAL
-                    </h4>
-                    <p className="mt-2 text-slate-700 dark:text-slate-300">
-                      {cv.resumoProfissional}
+                <div className="p-6 sm:p-10">
+                  {/* 1. Cabeçalho Executivo */}
+                  <header className="pb-4">
+                    <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight uppercase text-[#0F2440] dark:text-white">
+                      {cv.nomeCompleto}
+                    </h3>
+                    <p className="mt-1 text-base sm:text-lg font-bold text-[#214A85] dark:text-sky-300">
+                      {cv.tituloProfissional}
                     </p>
-                  </section>
-
-                  {/* 3. Experiência Profissional */}
-                  <section>
-                    <h4 className="border-b border-slate-300 pb-1 text-xs font-bold uppercase tracking-wider text-slate-900 dark:border-slate-700 dark:text-white">
-                      EXPERIÊNCIA PROFISSIONAL
-                    </h4>
-                    <div className="mt-2.5 space-y-4">
-                      {cv.experiencias.map((exp) => (
-                        <div key={exp.empresa}>
-                          <p className="font-bold text-slate-900 dark:text-white">
-                            {exp.empresa} — {exp.cargo} ({exp.periodo})
-                          </p>
-                          <ul className="mt-1.5 list-disc space-y-1 pl-5 text-slate-700 dark:text-slate-300">
-                            {exp.atribuicoes.map((attr, idx) => (
-                              <li key={idx}>{attr}</li>
-                            ))}
-                          </ul>
-                          <p className="mt-1.5 text-slate-700 dark:text-slate-300">
-                            <strong className="font-semibold text-slate-900 dark:text-white">
-                              Tecnologias:
-                            </strong>{' '}
-                            {exp.tecnologias.join(', ')}.
-                          </p>
-                        </div>
-                      ))}
+                    <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                      {cv.localizacao} | Telefone / WhatsApp: {cv.telefone} | E-mail: {cv.email}
+                    </p>
+                    <p className="mt-0.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                      LinkedIn: {cv.linkedinUrl} | GitHub: {cv.githubUrl}
+                    </p>
+                    <div aria-hidden="true" className="mt-4 space-y-0.5">
+                      <div className="h-[1.5px] w-full bg-[#173661] dark:bg-sky-400" />
+                      <div className="h-px w-full bg-slate-300 dark:bg-slate-700" />
                     </div>
-                  </section>
+                  </header>
 
-                  {/* 4. Formação Acadêmica */}
-                  <section>
-                    <h4 className="border-b border-slate-300 pb-1 text-xs font-bold uppercase tracking-wider text-slate-900 dark:border-slate-700 dark:text-white">
-                      FORMAÇÃO ACADÊMICA
-                    </h4>
-                    <div className="mt-2">
-                      <p className="font-bold text-slate-900 dark:text-white">
-                        {cv.formacao.curso} — {cv.formacao.instituicao}
+                  <div className="mt-4 space-y-6 text-sm leading-relaxed">
+                    {/* 2. Resumo Profissional */}
+                    <section>
+                      <AtsSectionHeading>RESUMO PROFISSIONAL</AtsSectionHeading>
+                      <p className="text-slate-800 dark:text-slate-200">
+                        {cv.resumoProfissional}
                       </p>
-                      <p className="text-slate-700 dark:text-slate-300">
-                        Status: {cv.formacao.conclusao} | Localização: {cv.formacao.localizacao}
-                      </p>
-                    </div>
-                  </section>
+                    </section>
 
-                  {/* 5. Habilidades Técnicas */}
-                  <section>
-                    <h4 className="border-b border-slate-300 pb-1 text-xs font-bold uppercase tracking-wider text-slate-900 dark:border-slate-700 dark:text-white">
-                      HABILIDADES TÉCNICAS
-                    </h4>
-                    <div className="mt-2 space-y-1 text-slate-700 dark:text-slate-300">
-                      {cv.habilidades.map((cat) => (
-                        <p key={cat.categoria}>
-                          <strong className="font-semibold text-slate-900 dark:text-white">
-                            {cat.categoria}:
-                          </strong>{' '}
-                          {cat.itens.join(', ')}.
-                        </p>
-                      ))}
-                    </div>
-                  </section>
+                    {/* 3. Experiência Profissional */}
+                    <section>
+                      <AtsSectionHeading>EXPERIÊNCIA PROFISSIONAL</AtsSectionHeading>
+                      <div className="space-y-5">
+                        {cv.experiencias.map((exp) => (
+                          <div
+                            key={exp.empresa}
+                            className="border-l-2 border-[#173661]/70 pl-3.5 dark:border-sky-400/70"
+                          >
+                            <p className="text-sm sm:text-base">
+                              <strong className="font-bold text-[#0F2440] dark:text-white">
+                                {exp.empresa}
+                              </strong>
+                              <span className="text-slate-500 dark:text-slate-400"> — </span>
+                              <strong className="font-bold text-[#214A85] dark:text-sky-300">
+                                {exp.cargo}
+                              </strong>{' '}
+                              <span className="inline-block rounded bg-[#EBF2FC] px-2 py-0.5 text-xs font-bold text-[#173661] dark:bg-sky-950/70 dark:text-sky-300">
+                                ({exp.periodo})
+                              </span>
+                            </p>
+                            <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-800 dark:text-slate-200 marker:text-[#173661] dark:marker:text-sky-400">
+                              {exp.atribuicoes.map((attr, idx) => (
+                                <li key={idx}>{attr}</li>
+                              ))}
+                            </ul>
+                            <p className="mt-2 text-slate-800 dark:text-slate-200">
+                              <strong className="font-bold text-[#173661] dark:text-sky-300">
+                                Tecnologias:
+                              </strong>{' '}
+                              {exp.tecnologias.join(', ')}.
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
 
-                  {/* 6. Projetos Relevantes */}
-                  <section>
-                    <h4 className="border-b border-slate-300 pb-1 text-xs font-bold uppercase tracking-wider text-slate-900 dark:border-slate-700 dark:text-white">
-                      PROJETOS RELEVANTES
-                    </h4>
-                    <div className="mt-2.5 space-y-4 text-slate-700 dark:text-slate-300">
+                    {/* 4. Formação Acadêmica */}
+                    <section>
+                      <AtsSectionHeading>FORMAÇÃO ACADÊMICA</AtsSectionHeading>
                       <div>
-                        <p className="font-bold text-slate-900 dark:text-white">
-                          {cv.projetoDestaque.titulo} (Projeto Autoral)
+                        <p className="text-sm sm:text-base">
+                          <strong className="font-bold text-[#0F2440] dark:text-white">
+                            {cv.formacao.curso}
+                          </strong>
+                          <span className="text-slate-500 dark:text-slate-400"> — </span>
+                          <strong className="font-bold text-[#214A85] dark:text-sky-300">
+                            {cv.formacao.instituicao}
+                          </strong>
                         </p>
-                        <p className="text-xs text-slate-600 dark:text-slate-400">
-                          Repositório GitHub: {cv.projetoDestaque.repositorioUrl}
-                        </p>
-                        <p className="mt-1">{cv.projetoDestaque.descricao}</p>
-                        <ul className="mt-1.5 list-disc space-y-1 pl-5">
-                          {cv.projetoDestaque.funcionalidades.map((func, idx) => (
-                            <li key={idx}>{func}.</li>
-                          ))}
-                        </ul>
-                        <p className="mt-1.5">
-                          <strong className="font-semibold text-slate-900 dark:text-white">
-                            Tecnologias:
-                          </strong>{' '}
-                          {cv.projetoDestaque.tecnologias.join(', ')}.
+                        <p className="mt-1 text-slate-600 dark:text-slate-300">
+                          Status: {cv.formacao.conclusao} | Localização: {cv.formacao.localizacao}
                         </p>
                       </div>
+                    </section>
 
-                      {cv.outrosProjetos.map((proj) => (
-                        <div key={proj.titulo}>
-                          <p className="font-bold text-slate-900 dark:text-white">
-                            {proj.titulo} ({proj.empresa})
+                    {/* 5. Habilidades Técnicas */}
+                    <section>
+                      <AtsSectionHeading>HABILIDADES TÉCNICAS</AtsSectionHeading>
+                      <div className="space-y-1.5 text-slate-800 dark:text-slate-200">
+                        {cv.habilidades.map((cat) => (
+                          <p key={cat.categoria} className="flex items-baseline gap-2">
+                            <span
+                              aria-hidden="true"
+                              className="inline-block h-1.5 w-1.5 shrink-0 bg-[#214A85] dark:bg-sky-400"
+                            />
+                            <span>
+                              <strong className="font-bold text-[#173661] dark:text-sky-300">
+                                {cat.categoria}:
+                              </strong>{' '}
+                              {cat.itens.join(', ')}.
+                            </span>
                           </p>
-                          <p className="mt-0.5">{proj.descricao}</p>
-                          <p className="mt-1">
-                            <strong className="font-semibold text-slate-900 dark:text-white">
+                        ))}
+                      </div>
+                    </section>
+
+                    {/* 6. Projetos Relevantes */}
+                    <section>
+                      <AtsSectionHeading>PROJETOS RELEVANTES</AtsSectionHeading>
+                      <div className="space-y-5 text-slate-800 dark:text-slate-200">
+                        {/* Destaque Executivo para o NutrIA */}
+                        <div className="border-l-[3px] border-[#173661] bg-[#F6F9FD] p-4 dark:border-sky-400 dark:bg-slate-900/75">
+                          <p className="text-sm sm:text-base font-bold text-[#0F2440] dark:text-white">
+                            {cv.projetoDestaque.titulo} (Projeto Autoral)
+                          </p>
+                          <p className="mt-0.5 text-xs">
+                            <strong className="font-bold text-[#173661] dark:text-sky-300">
+                              Repositório GitHub:
+                            </strong>{' '}
+                            <span className="italic text-[#214A85] dark:text-sky-300">
+                              {cv.projetoDestaque.repositorioUrl}
+                            </span>
+                          </p>
+                          <p className="mt-2">{cv.projetoDestaque.descricao}</p>
+                          <ul className="mt-2 list-disc space-y-1 pl-5 marker:text-[#173661] dark:marker:text-sky-400">
+                            {cv.projetoDestaque.funcionalidades.map((func, idx) => (
+                              <li key={idx}>{func}.</li>
+                            ))}
+                          </ul>
+                          <p className="mt-2">
+                            <strong className="font-bold text-[#173661] dark:text-sky-300">
                               Tecnologias:
                             </strong>{' '}
-                            {proj.tecnologias.join(', ')}.
+                            {cv.projetoDestaque.tecnologias.join(', ')}.
                           </p>
                         </div>
-                      ))}
-                    </div>
-                  </section>
 
-                  {/* 7. Idiomas */}
-                  <section>
-                    <h4 className="border-b border-slate-300 pb-1 text-xs font-bold uppercase tracking-wider text-slate-900 dark:border-slate-700 dark:text-white">
-                      IDIOMAS
-                    </h4>
-                    <p className="mt-2 text-slate-700 dark:text-slate-300">
-                      {cv.idiomas.map((i) => `${i.idioma}: ${i.nivel}`).join('  |  ')}
-                    </p>
-                  </section>
+                        {cv.outrosProjetos.map((proj) => (
+                          <div key={proj.titulo}>
+                            <p className="text-sm sm:text-base">
+                              <strong className="font-bold text-[#0F2440] dark:text-white">
+                                {proj.titulo}
+                              </strong>{' '}
+                              <strong className="font-bold text-[#214A85] dark:text-sky-300">
+                                ({proj.empresa})
+                              </strong>
+                            </p>
+                            <p className="mt-1">{proj.descricao}</p>
+                            <p className="mt-1">
+                              <strong className="font-bold text-[#173661] dark:text-sky-300">
+                                Tecnologias:
+                              </strong>{' '}
+                              {proj.tecnologias.join(', ')}.
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+
+                    {/* 7. Idiomas */}
+                    <section>
+                      <AtsSectionHeading>IDIOMAS</AtsSectionHeading>
+                      <p className="text-slate-800 dark:text-slate-200">
+                        {cv.idiomas.map((i) => `${i.idioma}: ${i.nivel}`).join('  |  ')}
+                      </p>
+                    </section>
+                  </div>
                 </div>
               </div>
             </div>

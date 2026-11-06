@@ -91,34 +91,43 @@ class PortfolioApiApplicationTests {
         }
 
         try (PDDocument doc = Loader.loadPDF(pdfBytes)) {
-            PDFTextStripper stripper = new PDFTextStripper();
-            stripper.setSortByPosition(true);
-            String textoExtraido = stripper.getText(doc);
+            assertTrue(doc.getNumberOfPages() == 1, "O currículo executivo deve caber em 1 página A4.");
 
-            // Verifica presença dos dados essenciais
-            assertTrue(textoExtraido.contains("MARCO LEONE MERINI"));
-            assertTrue(textoExtraido.contains("marcoleonemerini@gmail.com"));
-            assertTrue(textoExtraido.contains("(47) 99173-7051"));
-            assertTrue(textoExtraido.contains("WTTI Sistemas"));
-            assertTrue(textoExtraido.contains("Conta Azul"));
-            assertTrue(textoExtraido.contains("Bacharelado em Engenharia de Software"));
-            assertTrue(textoExtraido.contains("NutrIA"));
+            PDFTextStripper stripperPositional = new PDFTextStripper();
+            stripperPositional.setSortByPosition(true);
+            String textoExtraido = stripperPositional.getText(doc);
 
-            // Verifica a ordem estrita das seções para leitura linear de sistemas ATS
-            int idxNome = textoExtraido.indexOf("MARCO LEONE MERINI");
-            int idxResumo = textoExtraido.indexOf("RESUMO PROFISSIONAL");
-            int idxExperiencia = textoExtraido.indexOf("EXPERIÊNCIA PROFISSIONAL");
-            int idxFormacao = textoExtraido.indexOf("FORMAÇÃO ACADÊMICA");
-            int idxHabilidades = textoExtraido.indexOf("HABILIDADES TÉCNICAS");
-            int idxProjetos = textoExtraido.indexOf("PROJETOS RELEVANTES");
-            int idxIdiomas = textoExtraido.indexOf("IDIOMAS");
+            PDFTextStripper stripperStream = new PDFTextStripper();
+            stripperStream.setSortByPosition(false);
+            String textoStream = stripperStream.getText(doc);
 
-            assertTrue(idxNome >= 0 && idxNome < idxResumo, "Nome deve preceder Resumo Profissional");
-            assertTrue(idxResumo < idxExperiencia, "Resumo Profissional deve preceder Experiência Profissional");
-            assertTrue(idxExperiencia < idxFormacao, "Experiência Profissional deve preceder Formação Acadêmica");
-            assertTrue(idxFormacao < idxHabilidades, "Formação Acadêmica deve preceder Habilidades Técnicas");
-            assertTrue(idxHabilidades < idxProjetos, "Habilidades Técnicas deve preceder Projetos Relevantes");
-            assertTrue(idxProjetos < idxIdiomas, "Projetos Relevantes deve preceder Idiomas");
+            // Verifica presença dos dados essenciais em ambos os modos de extração ATS
+            for (String texto : new String[]{textoExtraido, textoStream}) {
+                assertTrue(texto.contains("MARCO LEONE MERINI"));
+                assertTrue(texto.contains("Desenvolvedor de Software | Bacharel em Engenharia de Software"));
+                assertTrue(texto.contains("marcoleonemerini@gmail.com"));
+                assertTrue(texto.contains("(47) 99173-7051"));
+                assertTrue(texto.contains("WTTI Sistemas — Desenvolvedor Trainee (2025 – Atual)"));
+                assertTrue(texto.contains("Conta Azul — Aprendiz de Engenharia de Dados (2022 – 2024)"));
+                assertTrue(texto.contains("Bacharelado em Engenharia de Software — Católica de Santa Catarina — Centro Universitário"));
+                assertTrue(texto.contains("NutrIA — Sistema de Acompanhamento Clínico Nutricional com Inteligência Artificial (Projeto Autoral)"));
+
+                // Verifica a ordem estrita das seções para leitura linear de sistemas ATS
+                int idxNome = texto.indexOf("MARCO LEONE MERINI");
+                int idxResumo = texto.indexOf("RESUMO PROFISSIONAL");
+                int idxExperiencia = texto.indexOf("EXPERIÊNCIA PROFISSIONAL");
+                int idxFormacao = texto.indexOf("FORMAÇÃO ACADÊMICA");
+                int idxHabilidades = texto.indexOf("HABILIDADES TÉCNICAS");
+                int idxProjetos = texto.indexOf("PROJETOS RELEVANTES");
+                int idxIdiomas = texto.indexOf("IDIOMAS");
+
+                assertTrue(idxNome >= 0 && idxNome < idxResumo, "Nome deve preceder Resumo Profissional");
+                assertTrue(idxResumo < idxExperiencia, "Resumo Profissional deve preceder Experiência Profissional");
+                assertTrue(idxExperiencia < idxFormacao, "Experiência Profissional deve preceder Formação Acadêmica");
+                assertTrue(idxFormacao < idxHabilidades, "Formação Acadêmica deve preceder Habilidades Técnicas");
+                assertTrue(idxHabilidades < idxProjetos, "Habilidades Técnicas deve preceder Projetos Relevantes");
+                assertTrue(idxProjetos < idxIdiomas, "Projetos Relevantes deve preceder Idiomas");
+            }
         }
     }
 
