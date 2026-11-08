@@ -1,6 +1,9 @@
 package com.marco.portfolio;
 
 import com.marco.portfolio.service.ContatoService;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,13 +12,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,6 +68,67 @@ class PortfolioApiApplicationTests {
                 .andExpect(jsonPath("$.projetoDestaque.repositorioUrl", is("https://github.com/Marco-Merini/NutrIA")))
                 .andExpect(jsonPath("$.contato.email", is("marcoleonemerini@gmail.com")))
                 .andExpect(jsonPath("$.contato.whatsappUrl", is("https://wa.me/5547991737051")));
+    }
+
+    @Test
+    @DisplayName("GET /api/curriculo/pdf deve gerar PDF compatível com ATS, texto selecionável e ordem linear correta das seções")
+    void deveGerarCurriculoPdfAtsComTextoExtraivelNaOrdemCorreta() throws Exception {
+        MvcResult result = mockMvc.perform(get("/api/curriculo/pdf"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_PDF))
+                .andExpect(header().string("Content-Disposition", containsString("Curriculo_Marco_Leone_Merini.pdf")))
+                .andReturn();
+
+        byte[] pdfBytes = result.getResponse().getContentAsByteArray();
+        assertTrue(pdfBytes.length > 1000, "O PDF gerado deve possuir conteúdo válido.");
+
+        // Salva o PDF revisado na raiz do projeto e em frontend/public para download imediato
+        Path rootPdf = Path.of("../Curriculo_Marco_Leone_Merini.pdf").normalize();
+        Path publicPdf = Path.of("../frontend/public/Curriculo_Marco_Leone_Merini.pdf").normalize();
+        Files.write(rootPdf, pdfBytes);
+        if (Files.isDirectory(publicPdf.getParent())) {
+            Files.write(publicPdf, pdfBytes);
+        }
+
+        try (PDDocument doc = Loader.loadPDF(pdfBytes)) {
+            assertTrue(doc.getNumberOfPages() == 1, "O currículo executivo deve caber em 1 página A4.");
+
+            PDFTextStripper stripperPositional = new PDFTextStripper();
+            stripperPositional.setSortByPosition(true);
+            String textoExtraido = stripperPositional.getText(doc);
+
+            PDFTextStripper stripperStream = new PDFTextStripper();
+            stripperStream.setSortByPosition(false);
+            String textoStream = stripperStream.getText(doc);
+
+            // Verifica presença dos dados essenciais em ambos os modos de extração ATS
+            for (String texto : new String[]{textoExtraido, textoStream}) {
+                assertTrue(texto.contains("MARCO LEONE MERINI"));
+                assertTrue(texto.contains("Desenvolvedor de Software | Bacharel em Engenharia de Software"));
+                assertTrue(texto.contains("marcoleonemerini@gmail.com"));
+                assertTrue(texto.contains("(47) 99173-7051"));
+                assertTrue(texto.contains("WTTI Sistemas — Desenvolvedor Trainee (2025 – Atual)"));
+                assertTrue(texto.contains("Conta Azul — Aprendiz de Engenharia de Dados (2022 – 2024)"));
+                assertTrue(texto.contains("Bacharelado em Engenharia de Software — Católica de Santa Catarina — Centro Universitário"));
+                assertTrue(texto.contains("NutrIA — Sistema de Acompanhamento Clínico Nutricional com Inteligência Artificial (Projeto Autoral)"));
+
+                // Verifica a ordem estrita das seções para leitura linear de sistemas ATS
+                int idxNome = texto.indexOf("MARCO LEONE MERINI");
+                int idxResumo = texto.indexOf("RESUMO PROFISSIONAL");
+                int idxExperiencia = texto.indexOf("EXPERIÊNCIA PROFISSIONAL");
+                int idxFormacao = texto.indexOf("FORMAÇÃO ACADÊMICA");
+                int idxHabilidades = texto.indexOf("HABILIDADES TÉCNICAS");
+                int idxProjetos = texto.indexOf("PROJETOS RELEVANTES");
+                int idxIdiomas = texto.indexOf("IDIOMAS");
+
+                assertTrue(idxNome >= 0 && idxNome < idxResumo, "Nome deve preceder Resumo Profissional");
+                assertTrue(idxResumo < idxExperiencia, "Resumo Profissional deve preceder Experiência Profissional");
+                assertTrue(idxExperiencia < idxFormacao, "Experiência Profissional deve preceder Formação Acadêmica");
+                assertTrue(idxFormacao < idxHabilidades, "Formação Acadêmica deve preceder Habilidades Técnicas");
+                assertTrue(idxHabilidades < idxProjetos, "Habilidades Técnicas deve preceder Projetos Relevantes");
+                assertTrue(idxProjetos < idxIdiomas, "Projetos Relevantes deve preceder Idiomas");
+            }
+        }
     }
 
     @Test

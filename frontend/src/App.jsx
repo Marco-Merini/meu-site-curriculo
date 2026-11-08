@@ -8,6 +8,7 @@ import { AboutSection } from './components/AboutSection';
 import { ExperienceSection } from './components/ExperienceSection';
 import { SkillsSection } from './components/SkillsSection';
 import { ProjectsSection } from './components/ProjectsSection';
+import { ResumeGeneratorSection } from './components/ResumeGeneratorSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 
@@ -60,6 +61,7 @@ export function App() {
           projetoDestaque={portfolioData.projetoDestaque}
           outrosProjetos={portfolioData.outrosProjetos}
         />
+        <ResumeGeneratorSection portfolioData={portfolioData} />
         <ContactSection contato={portfolioData.contato} />
       </main>
 

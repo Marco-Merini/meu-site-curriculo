@@ -1,4 +1,4 @@
-import { ArrowRight, MapPin, ExternalLink } from 'lucide-react';
+import { ArrowRight, MapPin, ExternalLink, FileDown } from 'lucide-react';
 import profilePhoto from '../assets/marco-merini.jpg';
 
 function renderTextWithBold(text) {
@@ -67,6 +67,13 @@ export function HeroSection({ perfil, contato }) {
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition-colors hover:border-emerald-500/50 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-emerald-500/50 dark:hover:bg-slate-800"
               >
                 Entre em contato
+              </a>
+              <a
+                href="#curriculo"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-500/35 bg-emerald-50/70 px-4 py-3 text-sm font-semibold text-emerald-800 transition-colors hover:bg-emerald-100/80 dark:border-emerald-500/30 dark:bg-emerald-950/35 dark:text-emerald-300 dark:hover:bg-emerald-950/60"
+              >
+                <FileDown className="h-4 w-4" aria-hidden="true" />
+                Ir para gerar Currículo
               </a>
             </div>
 

@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: '#formacao', label: 'Formação' },
   { href: '#habilidades', label: 'Habilidades' },
   { href: '#projetos', label: 'Projetos' },
+  { href: '#curriculo', label: 'Currículo' },
   { href: '#contato', label: 'Contato' },
 ];
 
