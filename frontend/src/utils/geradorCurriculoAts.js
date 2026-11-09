@@ -1,16 +1,17 @@
 import { jsPDF } from 'jspdf';
 import { API_BASE_URL } from '../services/api';
 
+const PORTFOLIO_URL = 'https://meu-site-curriculo-one.vercel.app/';
+
 function limparMarkdown(texto = '') {
   return String(texto).replace(/\*\*/g, '').trim();
 }
 
 export function construirDadosCurriculoAts(portfolioData) {
-  const { perfil, formacao, experiencias, habilidades, projetoDestaque, outrosProjetos, idiomas, contato } =
-    portfolioData;
+  const { perfil, formacao, experiencias, habilidades, idiomas, contato } = portfolioData;
 
   const resumoProfissional =
-    'Bacharel em Engenharia de Software pela Católica de Santa Catarina — Centro Universitário, com atuação profissional no desenvolvimento de software e experiência prática em desenvolvimento de aplicações corporativas, integração de sistemas, bancos de dados relacionais e engenharia de dados. Experiência com C#, .NET, .NET MAUI Blazor Hybrid, Blazor Server, JavaScript, TypeScript, Angular, Microsoft SQL Server, APIs REST e Swagger, além de automação e ingestão de dados com Python, SQL, Google BigQuery e Metabase. Perfil proativo, colaborativo e focado em arquitetura limpa, qualidade de entregas e soluções eficientes alinhadas às necessidades do negócio.';
+    'Me chamo Marco, sou bacharel em Engenharia de Software formado pela Católica de Joinville, com experiência em desenvolvimento de sistemas e engenharia de dados. Atualmente atuo como Desenvolvedor Júnior, trabalhando principalmente com C# e tecnologias do ecossistema .NET no desenvolvimento e manutenção de aplicações e APIs. Possuo conhecimentos em SQL, Python, JavaScript e TypeScript, além de experiência com Blazor, Angular, Entity Framework Core e Microsoft SQL Server. Tenho facilidade para aprender novas tecnologias, resolver problemas e colaborar em equipe, buscando sempre desenvolver soluções eficientes.';
 
   return {
     nomeCompleto: perfil.nomeCompleto,
@@ -20,6 +21,7 @@ export function construirDadosCurriculoAts(portfolioData) {
     email: contato.email,
     linkedinUrl: contato.linkedinUrl,
     githubUrl: contato.githubUrl,
+    portfolioUrl: PORTFOLIO_URL,
     resumoProfissional,
     experiencias: (experiencias || []).map((exp) => ({
       empresa: exp.empresa,
@@ -34,23 +36,12 @@ export function construirDadosCurriculoAts(portfolioData) {
       conclusao: formacao.conclusao,
       localizacao: contato.localizacao || perfil.localizacao,
     },
-    habilidades: (habilidades || []).map((cat) => ({
-      categoria: cat.categoria,
-      itens: (cat.itens || []).map((item) => (typeof item === 'string' ? item : item.nome)),
-    })),
-    projetoDestaque: {
-      titulo: projetoDestaque.titulo || projetoDestaque.nome,
-      repositorioUrl: projetoDestaque.repositorioUrl,
-      descricao: limparMarkdown(projetoDestaque.descricao || projetoDestaque.resumo),
-      funcionalidades: (projetoDestaque.funcionalidades || []).map(limparMarkdown),
-      tecnologias: projetoDestaque.tecnologias || projetoDestaque.tecnologiasPrincipais || [],
-    },
-    outrosProjetos: (outrosProjetos || []).map((proj) => ({
-      titulo: proj.titulo,
-      empresa: proj.empresa || proj.contexto,
-      descricao: limparMarkdown(proj.descricao || proj.resumo),
-      tecnologias: proj.tecnologias || [],
-    })),
+    habilidades: (habilidades || [])
+      .filter((cat) => String(cat.categoria).toLowerCase() !== 'inteligência artificial')
+      .map((cat) => ({
+        categoria: cat.categoria,
+        itens: (cat.itens || []).map((item) => (typeof item === 'string' ? item : item.nome)),
+      })),
     idiomas: idiomas || [],
   };
 }
@@ -63,6 +54,7 @@ export function gerarTextoCurriculoAts(portfolioData) {
   linhas.push(cv.tituloProfissional);
   linhas.push(`${cv.localizacao} | Telefone / WhatsApp: ${cv.telefone} | E-mail: ${cv.email}`);
   linhas.push(`LinkedIn: ${cv.linkedinUrl} | GitHub: ${cv.githubUrl}`);
+  linhas.push(`Portfólio: ${cv.portfolioUrl}`);
   linhas.push('');
 
   linhas.push('RESUMO PROFISSIONAL');
@@ -90,23 +82,6 @@ export function gerarTextoCurriculoAts(portfolioData) {
   });
   linhas.push('');
 
-  linhas.push('PROJETOS RELEVANTES');
-  linhas.push(`${cv.projetoDestaque.titulo} (Projeto Autoral)`);
-  linhas.push(`Repositório GitHub: ${cv.projetoDestaque.repositorioUrl}`);
-  linhas.push(cv.projetoDestaque.descricao);
-  cv.projetoDestaque.funcionalidades.forEach((func) => {
-    linhas.push(`- ${func}.`);
-  });
-  linhas.push(`Tecnologias: ${cv.projetoDestaque.tecnologias.join(', ')}.`);
-  linhas.push('');
-
-  cv.outrosProjetos.forEach((proj) => {
-    linhas.push(`${proj.titulo} (${proj.empresa})`);
-    linhas.push(proj.descricao);
-    linhas.push(`Tecnologias: ${proj.tecnologias.join(', ')}.`);
-    linhas.push('');
-  });
-
   linhas.push('IDIOMAS');
   linhas.push(cv.idiomas.map((i) => `${i.idioma}: ${i.nivel}`).join(' | '));
 
@@ -126,7 +101,7 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
     author: cv.nomeCompleto,
     subject: 'Currículo Profissional Otimizado para ATS - Desenvolvedor de Software',
     keywords:
-      'Desenvolvedor de Software, Engenharia de Software, C#, .NET, Blazor, SQL Server, Python, SQL, BigQuery, Angular, TypeScript, JavaScript, APIs REST, RAG',
+      'Desenvolvedor de Software, Engenharia de Software, C#, .NET, Blazor, SQL Server, Python, SQL, BigQuery, Angular, TypeScript, JavaScript, APIs REST',
   });
 
   // Paleta executiva em azul-marinho e ardósia
@@ -136,14 +111,13 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
   const COLOR_TEXT_BODY = [30, 41, 59];      // #1E293B
   const COLOR_TEXT_MUTED = [71, 85, 105];    // #475569
   const COLOR_LINE_SUBTLE = [203, 213, 225]; // #CBD5E1
-  const COLOR_BG_CALLOUT = [246, 249, 253];  // #F6F9FD
   const COLOR_BG_BADGE = [235, 242, 252];    // #EBF2FC
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const marginX = 38;
-  const marginTop = 34;
-  const marginBottom = 24;
+  const marginX = 42;
+  const marginTop = 38;
+  const marginBottom = 28;
   const contentWidth = pageWidth - marginX * 2;
 
   const drawTopBar = () => {
@@ -176,29 +150,29 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
   };
 
   const writeSectionTitle = (title) => {
-    ensureSpace(24);
-    y += 2.5;
+    ensureSpace(26);
+    y += 3;
     doc.setFillColor(...COLOR_NAVY_PRIMARY);
-    doc.rect(marginX, y - 8, 3, 9, 'F');
+    doc.rect(marginX, y - 8.5, 3.2, 9.5, 'F');
 
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.8);
+    doc.setFontSize(10.2);
     doc.setTextColor(...COLOR_NAVY_PRIMARY);
-    doc.text(title, marginX + 7, y);
-    y += 3.5;
+    doc.text(title, marginX + 7.5, y);
+    y += 4;
 
     doc.setDrawColor(...COLOR_LINE_SUBTLE);
     doc.setLineWidth(0.6);
     doc.line(marginX, y, pageWidth - marginX, y);
 
     doc.setDrawColor(...COLOR_NAVY_PRIMARY);
-    doc.setLineWidth(1.3);
-    doc.line(marginX, y, marginX + 54, y);
-    y += 12;
+    doc.setLineWidth(1.4);
+    doc.line(marginX, y, marginX + 58, y);
+    y += 13.5;
   };
 
   const writeBullet = (text, fontSize, lineHeight, leftOffset = 0) => {
-    const indent = 9;
+    const indent = 9.5;
     const baseX = marginX + leftOffset;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(fontSize);
@@ -215,7 +189,7 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
       doc.text(line, baseX + indent, y);
       y += lineHeight;
     });
-    y += 0.5;
+    y += 1;
   };
 
   const writeLabeledLine = (label, value, fontSize, lineHeight, spaceAfter = 0, leftOffset = 0) => {
@@ -246,24 +220,25 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
   };
 
   // 1. Cabeçalho Executivo
-  writeColoredParagraph(cv.nomeCompleto.toUpperCase(), 'bold', 19, 20, 1.5, COLOR_NAVY_DARK);
-  writeColoredParagraph(cv.tituloProfissional, 'bold', 11.2, 14.5, 3, COLOR_NAVY_ACCENT);
+  writeColoredParagraph(cv.nomeCompleto.toUpperCase(), 'bold', 20, 22, 2, COLOR_NAVY_DARK);
+  writeColoredParagraph(cv.tituloProfissional, 'bold', 11.5, 15, 4, COLOR_NAVY_ACCENT);
   writeColoredParagraph(
     `${cv.localizacao} | Telefone / WhatsApp: ${cv.telefone} | E-mail: ${cv.email}`,
     'normal',
-    8.9,
-    12,
+    9.2,
+    13,
     0.5,
     COLOR_TEXT_MUTED
   );
   writeColoredParagraph(
     `LinkedIn: ${cv.linkedinUrl} | GitHub: ${cv.githubUrl}`,
     'normal',
-    8.9,
-    12,
-    0,
+    9.2,
+    13,
+    0.5,
     COLOR_TEXT_MUTED
   );
+  writeColoredParagraph(`Portfólio: ${cv.portfolioUrl}`, 'normal', 9.2, 13, 0, COLOR_TEXT_MUTED);
 
   const lineY = y - 5.5;
   doc.setDrawColor(...COLOR_NAVY_PRIMARY);
@@ -272,22 +247,22 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
   doc.setDrawColor(...COLOR_LINE_SUBTLE);
   doc.setLineWidth(0.5);
   doc.line(marginX, lineY + 2, pageWidth - marginX, lineY + 2);
-  y = lineY + 12;
+  y = lineY + 14;
 
   // 2. Resumo Profissional
   writeSectionTitle('RESUMO PROFISSIONAL');
-  writeColoredParagraph(cv.resumoProfissional, 'normal', 9.05, 12.2, 4, COLOR_TEXT_BODY);
+  writeColoredParagraph(cv.resumoProfissional, 'normal', 9.5, 13.4, 6, COLOR_TEXT_BODY);
 
   // 3. Experiência Profissional
   writeSectionTitle('EXPERIÊNCIA PROFISSIONAL');
   cv.experiencias.forEach((exp, idx) => {
-    const leftOffset = 7;
+    const leftOffset = 8;
     const baseX = marginX + leftOffset;
     const blockStartY = y;
 
-    ensureSpace(15);
+    ensureSpace(16);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.7);
+    doc.setFontSize(10.1);
     const wEmpresa = doc.getTextWidth(exp.empresa);
     doc.setFont('helvetica', 'normal');
     const sep = ' — ';
@@ -296,15 +271,15 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
     const wCargo = doc.getTextWidth(exp.cargo);
 
     const periodoText = `(${exp.periodo})`;
-    doc.setFontSize(8.9);
+    doc.setFontSize(9.2);
     const wPeriodo = doc.getTextWidth(periodoText);
     const periodX = baseX + wEmpresa + wSep + wCargo + 6;
 
     doc.setFillColor(...COLOR_BG_BADGE);
-    doc.rect(periodX - 3.5, y - 8.8, wPeriodo + 7, 11.2, 'F');
+    doc.rect(periodX - 4, y - 9.2, wPeriodo + 8, 11.8, 'F');
 
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.7);
+    doc.setFontSize(10.1);
     doc.setTextColor(...COLOR_NAVY_DARK);
     doc.text(exp.empresa, baseX, y);
 
@@ -316,32 +291,32 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
     doc.setTextColor(...COLOR_NAVY_ACCENT);
     doc.text(exp.cargo, baseX + wEmpresa + wSep, y);
 
-    doc.setFontSize(8.9);
+    doc.setFontSize(9.2);
     doc.setTextColor(...COLOR_NAVY_PRIMARY);
     doc.text(periodoText, periodX, y);
 
-    y += 13;
+    y += 14.5;
 
     exp.atribuicoes.forEach((attr) => {
-      writeBullet(attr, 9.0, 11.7, leftOffset);
+      writeBullet(attr, 9.4, 13, leftOffset);
     });
 
-    writeLabeledLine('Tecnologias: ', `${exp.tecnologias.join(', ')}.`, 8.9, 11.7, 0, leftOffset);
+    writeLabeledLine('Tecnologias: ', `${exp.tecnologias.join(', ')}.`, 9.3, 13, 0, leftOffset);
 
-    const blockTopY = blockStartY - 8;
-    const blockBottomY = y - 9;
+    const blockTopY = blockStartY - 8.5;
+    const blockBottomY = y - 9.5;
     doc.setFillColor(...COLOR_LINE_SUBTLE);
-    doc.rect(marginX, blockTopY, 1.8, blockBottomY - blockTopY, 'F');
+    doc.rect(marginX, blockTopY, 2, blockBottomY - blockTopY, 'F');
     doc.setFillColor(...COLOR_NAVY_PRIMARY);
-    doc.rect(marginX, blockTopY, 1.8, 10, 'F');
+    doc.rect(marginX, blockTopY, 2, 11, 'F');
 
-    y += idx === cv.experiencias.length - 1 ? 4 : 5.5;
+    y += idx === cv.experiencias.length - 1 ? 6 : 8;
   });
 
   // 4. Formação Acadêmica
   writeSectionTitle('FORMAÇÃO ACADÊMICA');
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9.5);
+  doc.setFontSize(9.9);
   doc.setTextColor(...COLOR_NAVY_DARK);
   const wCurso = doc.getTextWidth(cv.formacao.curso);
   doc.text(cv.formacao.curso, marginX, y);
@@ -355,169 +330,40 @@ export function gerarPdfCurriculoAtsClient(portfolioData) {
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...COLOR_NAVY_ACCENT);
   doc.text(cv.formacao.instituicao, marginX + wCurso + wSepForm, y);
-  y += 13.5;
+  y += 15;
 
   writeColoredParagraph(
     `Status: ${cv.formacao.conclusao} | Localização: ${cv.formacao.localizacao}`,
     'normal',
-    8.95,
-    11.8,
-    4,
+    9.4,
+    13,
+    6,
     COLOR_TEXT_MUTED
   );
 
   // 5. Habilidades Técnicas
   writeSectionTitle('HABILIDADES TÉCNICAS');
   cv.habilidades.forEach((cat, idx) => {
-    ensureSpace(12);
+    ensureSpace(13);
     doc.setFillColor(...COLOR_NAVY_ACCENT);
-    doc.rect(marginX, y - 4.6, 2.8, 2.8, 'F');
+    doc.rect(marginX, y - 5, 3, 3, 'F');
     writeLabeledLine(
       `${cat.categoria}: `,
       `${cat.itens.join(', ')}.`,
-      9.0,
-      11.7,
-      idx === cv.habilidades.length - 1 ? 4 : 1.4,
-      6.5
+      9.4,
+      13,
+      idx === cv.habilidades.length - 1 ? 6 : 2,
+      7
     );
   });
 
-  // 6. Projetos Relevantes (Destaque para o NutrIA)
-  writeSectionTitle('PROJETOS RELEVANTES');
-  y += 3;
-  const boxIndent = 9;
-  const innerWidth = contentWidth - boxIndent - 6;
-  const xLeft = marginX + boxIndent;
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9.5);
-  const titleLines = doc.splitTextToSize(`${cv.projetoDestaque.titulo} (Projeto Autoral)`, innerWidth);
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8.95);
-  const descLines = doc.splitTextToSize(cv.projetoDestaque.descricao, innerWidth);
-
-  doc.setFontSize(8.9);
-  const bulletLinesList = cv.projetoDestaque.funcionalidades.map((func) =>
-    doc.splitTextToSize(`${func}.`, innerWidth - 9)
-  );
-  const totalBulletLines = bulletLinesList.reduce((acc, b) => acc + b.length, 0);
-
-  const techLabel = 'Tecnologias: ';
-  const techValue = `${cv.projetoDestaque.tecnologias.join(', ')}.`;
-  const techLines = doc.splitTextToSize(`${techLabel}${techValue}`, innerWidth);
-
-  const totalDeltaY =
-    titleLines.length * 12 +
-    11.8 +
-    descLines.length * 11.5 +
-    1.5 +
-    totalBulletLines * 11.4 +
-    bulletLinesList.length * 0.4 +
-    1 +
-    techLines.length * 11.5;
-
-  const boxTopY = y - 10.5;
-  const lastBaselineY = y + totalDeltaY - 11.5;
-  const boxBottomY = lastBaselineY + 5.5;
-  const boxHeight = boxBottomY - boxTopY;
-
-  doc.setFillColor(...COLOR_BG_CALLOUT);
-  doc.rect(marginX, boxTopY, contentWidth, boxHeight, 'F');
-  doc.setFillColor(...COLOR_NAVY_PRIMARY);
-  doc.rect(marginX, boxTopY, 2.6, boxHeight, 'F');
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9.5);
-  doc.setTextColor(...COLOR_NAVY_DARK);
-  titleLines.forEach((line) => {
-    doc.text(line, xLeft, y);
-    y += 12;
-  });
-
-  const repoLabel = 'Repositório GitHub: ';
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8.65);
-  doc.setTextColor(...COLOR_NAVY_PRIMARY);
-  doc.text(repoLabel, xLeft, y);
-  const wRepoLabel = doc.getTextWidth(repoLabel);
-  doc.setFont('helvetica', 'italic');
-  doc.setTextColor(...COLOR_NAVY_ACCENT);
-  doc.text(cv.projetoDestaque.repositorioUrl, xLeft + wRepoLabel, y);
-  y += 11.8;
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8.95);
-  doc.setTextColor(...COLOR_TEXT_BODY);
-  descLines.forEach((line) => {
-    doc.text(line, xLeft, y);
-    y += 11.5;
-  });
-  y += 1.5;
-
-  bulletLinesList.forEach((bLines) => {
-    bLines.forEach((line, idx) => {
-      if (idx === 0) {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8.9);
-        doc.setTextColor(...COLOR_NAVY_PRIMARY);
-        doc.text('-', xLeft, y);
-      }
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.9);
-      doc.setTextColor(...COLOR_TEXT_BODY);
-      doc.text(line, xLeft + 9, y);
-      y += 11.4;
-    });
-    y += 0.4;
-  });
-  y += 1;
-
-  techLines.forEach((line, idx) => {
-    if (idx === 0 && line.startsWith(techLabel)) {
-      const rest = line.slice(techLabel.length);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8.9);
-      doc.setTextColor(...COLOR_NAVY_PRIMARY);
-      doc.text(techLabel, xLeft, y);
-      const labelW = doc.getTextWidth(techLabel);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(...COLOR_TEXT_BODY);
-      doc.text(rest, xLeft + labelW, y);
-    } else {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.9);
-      doc.setTextColor(...COLOR_TEXT_BODY);
-      doc.text(line, xLeft, y);
-    }
-    y += 11.5;
-  });
-
-  y += 7;
-
-  cv.outrosProjetos.forEach((proj) => {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.25);
-    doc.setTextColor(...COLOR_NAVY_DARK);
-    const wTitulo = doc.getTextWidth(proj.titulo);
-    doc.text(proj.titulo, marginX, y);
-
-    doc.setFontSize(8.9);
-    doc.setTextColor(...COLOR_NAVY_ACCENT);
-    doc.text(` (${proj.empresa})`, marginX + wTitulo, y);
-    y += 12.6;
-
-    writeColoredParagraph(proj.descricao, 'normal', 8.9, 11.6, 1, COLOR_TEXT_BODY);
-    writeLabeledLine('Tecnologias: ', `${proj.tecnologias.join(', ')}.`, 8.85, 11.6, 4, 0);
-  });
-
-  // 7. Idiomas
+  // 6. Idiomas
   writeSectionTitle('IDIOMAS');
   writeColoredParagraph(
     cv.idiomas.map((i) => `${i.idioma}: ${i.nivel}`).join('  |  '),
     'normal',
-    9.0,
-    11.6,
+    9.4,
+    13,
     0,
     COLOR_TEXT_BODY
   );

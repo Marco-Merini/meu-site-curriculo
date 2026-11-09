@@ -107,10 +107,14 @@ class PortfolioApiApplicationTests {
                 assertTrue(texto.contains("Desenvolvedor de Software | Bacharel em Engenharia de Software"));
                 assertTrue(texto.contains("marcoleonemerini@gmail.com"));
                 assertTrue(texto.contains("(47) 99173-7051"));
+                assertTrue(texto.contains("https://meu-site-curriculo-one.vercel.app/"));
+                assertTrue(texto.contains("Me chamo Marco, sou bacharel em Engenharia de Software formado pela Católica de Joinville"));
                 assertTrue(texto.contains("WTTI Sistemas — Desenvolvedor Trainee (2025 – Atual)"));
                 assertTrue(texto.contains("Conta Azul — Aprendiz de Engenharia de Dados (2022 – 2024)"));
                 assertTrue(texto.contains("Bacharelado em Engenharia de Software — Católica de Santa Catarina — Centro Universitário"));
-                assertTrue(texto.contains("NutrIA — Sistema de Acompanhamento Clínico Nutricional com Inteligência Artificial (Projeto Autoral)"));
+                assertTrue(!texto.contains("Inteligência Artificial: OpenAI API, Arquitetura RAG."));
+                assertTrue(!texto.contains("PROJETOS RELEVANTES"));
+                assertTrue(!texto.contains("NutrIA"));
 
                 // Verifica a ordem estrita das seções para leitura linear de sistemas ATS
                 int idxNome = texto.indexOf("MARCO LEONE MERINI");
@@ -118,15 +122,13 @@ class PortfolioApiApplicationTests {
                 int idxExperiencia = texto.indexOf("EXPERIÊNCIA PROFISSIONAL");
                 int idxFormacao = texto.indexOf("FORMAÇÃO ACADÊMICA");
                 int idxHabilidades = texto.indexOf("HABILIDADES TÉCNICAS");
-                int idxProjetos = texto.indexOf("PROJETOS RELEVANTES");
                 int idxIdiomas = texto.indexOf("IDIOMAS");
 
                 assertTrue(idxNome >= 0 && idxNome < idxResumo, "Nome deve preceder Resumo Profissional");
                 assertTrue(idxResumo < idxExperiencia, "Resumo Profissional deve preceder Experiência Profissional");
                 assertTrue(idxExperiencia < idxFormacao, "Experiência Profissional deve preceder Formação Acadêmica");
                 assertTrue(idxFormacao < idxHabilidades, "Formação Acadêmica deve preceder Habilidades Técnicas");
-                assertTrue(idxHabilidades < idxProjetos, "Habilidades Técnicas deve preceder Projetos Relevantes");
-                assertTrue(idxProjetos < idxIdiomas, "Projetos Relevantes deve preceder Idiomas");
+                assertTrue(idxHabilidades < idxIdiomas, "Habilidades Técnicas deve preceder Idiomas");
             }
         }
     }

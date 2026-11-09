@@ -70,11 +70,8 @@ export function ResumeGeneratorSection({ portfolioData }) {
                 id="curriculo-heading"
                 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white"
               >
-                Currículo Executivo em PDF (Padrão ATS)
+                Currículo em PDF
               </h2>
-              <p className="mt-2 text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-300">
-                Documento em coluna única com hierarquia tipográfica executiva e texto 100% selecionável para sistemas de recrutamento e leitura humana.
-              </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3 shrink-0">
@@ -159,6 +156,9 @@ export function ResumeGeneratorSection({ portfolioData }) {
                     </p>
                     <p className="mt-0.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                       LinkedIn: {cv.linkedinUrl} | GitHub: {cv.githubUrl}
+                    </p>
+                    <p className="mt-0.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                      Portfólio: {cv.portfolioUrl}
                     </p>
                     <div aria-hidden="true" className="mt-4 space-y-0.5">
                       <div className="h-[1.5px] w-full bg-[#173661] dark:bg-sky-400" />
@@ -252,60 +252,7 @@ export function ResumeGeneratorSection({ portfolioData }) {
                       </div>
                     </section>
 
-                    {/* 6. Projetos Relevantes */}
-                    <section>
-                      <AtsSectionHeading>PROJETOS RELEVANTES</AtsSectionHeading>
-                      <div className="space-y-5 text-slate-800 dark:text-slate-200">
-                        {/* Destaque Executivo para o NutrIA */}
-                        <div className="border-l-[3px] border-[#173661] bg-[#F6F9FD] p-4 dark:border-sky-400 dark:bg-slate-900/75">
-                          <p className="text-sm sm:text-base font-bold text-[#0F2440] dark:text-white">
-                            {cv.projetoDestaque.titulo} (Projeto Autoral)
-                          </p>
-                          <p className="mt-0.5 text-xs">
-                            <strong className="font-bold text-[#173661] dark:text-sky-300">
-                              Repositório GitHub:
-                            </strong>{' '}
-                            <span className="italic text-[#214A85] dark:text-sky-300">
-                              {cv.projetoDestaque.repositorioUrl}
-                            </span>
-                          </p>
-                          <p className="mt-2">{cv.projetoDestaque.descricao}</p>
-                          <ul className="mt-2 list-disc space-y-1 pl-5 marker:text-[#173661] dark:marker:text-sky-400">
-                            {cv.projetoDestaque.funcionalidades.map((func, idx) => (
-                              <li key={idx}>{func}.</li>
-                            ))}
-                          </ul>
-                          <p className="mt-2">
-                            <strong className="font-bold text-[#173661] dark:text-sky-300">
-                              Tecnologias:
-                            </strong>{' '}
-                            {cv.projetoDestaque.tecnologias.join(', ')}.
-                          </p>
-                        </div>
-
-                        {cv.outrosProjetos.map((proj) => (
-                          <div key={proj.titulo}>
-                            <p className="text-sm sm:text-base">
-                              <strong className="font-bold text-[#0F2440] dark:text-white">
-                                {proj.titulo}
-                              </strong>{' '}
-                              <strong className="font-bold text-[#214A85] dark:text-sky-300">
-                                ({proj.empresa})
-                              </strong>
-                            </p>
-                            <p className="mt-1">{proj.descricao}</p>
-                            <p className="mt-1">
-                              <strong className="font-bold text-[#173661] dark:text-sky-300">
-                                Tecnologias:
-                              </strong>{' '}
-                              {proj.tecnologias.join(', ')}.
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </section>
-
-                    {/* 7. Idiomas */}
+                    {/* 6. Idiomas */}
                     <section>
                       <AtsSectionHeading>IDIOMAS</AtsSectionHeading>
                       <p className="text-slate-800 dark:text-slate-200">
