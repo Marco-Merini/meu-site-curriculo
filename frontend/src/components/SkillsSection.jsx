@@ -19,7 +19,7 @@ export function SkillsSection({ habilidades }) {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl text-left">
           <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
-            Competências
+            Competências e Experiências
           </span>
           <h2
             id="habilidades-heading"

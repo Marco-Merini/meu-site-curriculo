@@ -117,7 +117,7 @@ export const portfolioFallbackData = {
   outrosProjetos: [
     {
       id: 'gerador-curriculo-ats',
-      titulo: 'Gerador de Currículo Executivo em PDF (Otimizado para ATS)',
+      titulo: 'Gerador de Currículo em PDF',
       empresa: 'Projeto Autoral Integrado ao Portfólio',
       descricao:
         'Ferramenta desenvolvida para gerar dinamicamente um currículo executivo de página única (A4) com 100% de compatibilidade com sistemas de recrutamento (Applicant Tracking Systems). No backend, foi construído um motor de renderização programática em Java com Spring Boot e Apache PDFBox que desenha elementos vetoriais (faixas, divisórias e marcadores) separados da camada de texto linear, garantindo extração limpa na ordem exata das seções. No frontend em React, conta com pré-visualização em tempo real, cópia estruturada de texto puro para plataformas de vagas e geração autônoma via jsPDF como fallback client-side.',
