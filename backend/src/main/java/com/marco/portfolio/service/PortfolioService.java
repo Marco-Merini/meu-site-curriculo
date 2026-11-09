@@ -130,18 +130,11 @@ public class PortfolioService {
 
         List<OutroProjetoDto> outrosProjetos = List.of(
                 new OutroProjetoDto(
-                        "wtti-operacoes",
-                        "Soluções de Apontamento de Operações e Separação de Pedidos",
-                        "WTTI Sistemas",
-                        "Atuação no desenvolvimento de aplicações corporativas voltadas a rotinas operacionais e logísticas, integrando interfaces híbridas, serviços de backend e persistência em banco de dados relacional.",
-                        List.of("C#", ".NET MAUI", "Blazor Hybrid", "SQL Server")
-                ),
-                new OutroProjetoDto(
-                        "conta-azul-dados",
-                        "Automação e Ingestão de Dados Públicos (CNPJ e CNAE)",
-                        "Conta Azul",
-                        "Desenvolvimento de fluxos automatizados para ingestão de bases públicas e otimização de consultas analíticas no Google BigQuery para suporte a relatórios no Metabase.",
-                        List.of("Python", "SQL", "BigQuery", "Metabase")
+                        "gerador-curriculo-ats",
+                        "Gerador de Currículo Executivo em PDF (Otimizado para ATS)",
+                        "Projeto Autoral Integrado ao Portfólio",
+                        "Ferramenta desenvolvida para gerar dinamicamente um currículo executivo de página única (A4) com 100% de compatibilidade com sistemas de recrutamento (Applicant Tracking Systems). No backend, foi construído um motor de renderização programática em Java com Spring Boot e Apache PDFBox que desenha elementos vetoriais (faixas, divisórias e marcadores) separados da camada de texto linear, garantindo extração limpa na ordem exata das seções. No frontend em React, conta com pré-visualização em tempo real, cópia estruturada de texto puro para plataformas de vagas e geração autônoma via jsPDF como fallback client-side.",
+                        List.of("Java 27", "Spring Boot", "Apache PDFBox", "React", "Tailwind CSS", "jsPDF", "JUnit 5")
                 )
         );
 

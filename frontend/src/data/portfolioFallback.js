@@ -116,20 +116,28 @@ export const portfolioFallbackData = {
   },
   outrosProjetos: [
     {
-      id: 'wtti-operacoes',
-      titulo: 'Soluções de Apontamento de Operações e Separação de Pedidos',
-      empresa: 'WTTI Sistemas',
+      id: 'gerador-curriculo-ats',
+      titulo: 'Gerador de Currículo Executivo em PDF (Otimizado para ATS)',
+      empresa: 'Projeto Autoral Integrado ao Portfólio',
       descricao:
-        'Atuação no desenvolvimento de aplicações corporativas voltadas a rotinas operacionais e logísticas, integrando interfaces híbridas, serviços de backend e persistência em banco de dados relacional.',
-      tecnologias: ['C#', '.NET MAUI', 'Blazor Hybrid', 'SQL Server'],
-    },
-    {
-      id: 'conta-azul-dados',
-      titulo: 'Automação e Ingestão de Dados Públicos (CNPJ e CNAE)',
-      empresa: 'Conta Azul',
-      descricao:
-        'Desenvolvimento de fluxos automatizados para ingestão de bases públicas e otimização de consultas analíticas no Google BigQuery para suporte a relatórios no Metabase.',
-      tecnologias: ['Python', 'SQL', 'BigQuery', 'Metabase'],
+        'Ferramenta desenvolvida para gerar dinamicamente um currículo executivo de página única (A4) com 100% de compatibilidade com sistemas de recrutamento (Applicant Tracking Systems). No backend, foi construído um motor de renderização programática em Java com Spring Boot e Apache PDFBox que desenha elementos vetoriais (faixas, divisórias e marcadores) separados da camada de texto linear, garantindo extração limpa na ordem exata das seções. No frontend em React, conta com pré-visualização em tempo real, cópia estruturada de texto puro para plataformas de vagas e geração autônoma via jsPDF como fallback client-side.',
+      comoFoiFeito:
+        'Desenvolvido com arquitetura híbrida (API REST em Spring Boot + geração client-side em React), utilizando cálculo preciso de coordenadas tipográficas A4, fontes padronizadas e validação automatizada de leitura linear com PDFTextStripper e pdftotext.',
+      funcionalidades: [
+        'Renderização programática em coluna única com Apache PDFBox no backend Java',
+        'Fallback autônomo no navegador utilizando jsPDF para funcionamento offline',
+        'Pré-visualização executiva interativa e cópia estruturada para formulários ATS',
+        'Testes automatizados com JUnit 5 e PDFTextStripper validando a ordem de extração',
+      ],
+      tecnologias: [
+        'Java 27',
+        'Spring Boot',
+        'Apache PDFBox',
+        'React',
+        'Tailwind CSS',
+        'jsPDF',
+        'JUnit 5',
+      ],
     },
   ],
   idiomas: [
